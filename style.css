@@ -1,0 +1,513 @@
+/* ==========================================================
+   TOKENS
+   bg:    #FFF3F8 -> #FDE9F2  (blush wash)
+   glass: rgba(255,255,255,.32) panels, blur(30px)
+   ink:   #3a2b33
+   rose:  #FF4F87  (accent / headings)
+   gold:  #F5C77E  (sheen highlight)
+   lilac: #E7C9FF  (secondary blob)
+   display font: 'Caveat' (handwritten signature)
+   body font: 'Poppins'
+========================================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #FFF3F8;
+  color: #3a2b33;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ==========================================================
+   AMBIENT BACKGROUND
+========================================================== */
+
+.background {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: -5;
+  background: linear-gradient(180deg, #fff3f8, #ffe3f0, #fdf6ff);
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  opacity: .035;
+  background-image: radial-gradient(#3a2b33 1px, transparent 1px);
+  background-size: 3px 3px;
+  mix-blend-mode: multiply;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(110px);
+  opacity: .65;
+  animation: float 16s ease-in-out infinite;
+}
+
+.blob1 { width: 340px; height: 340px; background: #ffc7e0; top: -100px; left: -80px; }
+.blob2 { width: 380px; height: 380px; background: #ffe0ef; right: -110px; bottom: -110px; animation-delay: 4s; }
+.blob3 { width: 280px; height: 280px; background: #e7c9ff; top: 42%; left: 48%; animation-delay: 8s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-30px) scale(1.04); }
+}
+
+/* ==========================================================
+   SCREENS
+========================================================== */
+
+.screen {
+  display: none;
+  min-height: 100vh;
+  width: 100%;
+  padding: 28px 18px;
+  justify-content: center;
+  align-items: center;
+}
+
+.screen.active {
+  display: flex;
+}
+
+.screen.entering {
+  animation: rise .7s cubic-bezier(.19, 1, .22, 1);
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================
+   LIQUID GLASS PANEL
+   Layered translucency + specular sheen + inner rim light,
+   the way iOS/visionOS glass reads: a soft highlight riding
+   the top edge, deep diffuse shadow beneath, refracted blur.
+========================================================== */
+
+.glass {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  padding: 38px 34px;
+  border-radius: 32px;
+  text-align: center;
+  overflow: hidden;
+  background: linear-gradient(155deg, rgba(255,255,255,.5), rgba(255,255,255,.18));
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  border: 1px solid rgba(255,255,255,.6);
+  box-shadow:
+    0 20px 60px rgba(255, 90, 150, .18),
+    0 2px 0 rgba(255,255,255,.7) inset,
+    0 -12px 30px rgba(255,255,255,.25) inset;
+}
+
+.glass .sheen {
+  position: absolute;
+  top: -60%;
+  left: -30%;
+  width: 70%;
+  height: 220%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.55), transparent);
+  transform: rotate(12deg);
+  pointer-events: none;
+  animation: sheenSweep 7s ease-in-out infinite;
+}
+
+@keyframes sheenSweep {
+  0%   { left: -40%; opacity: 0; }
+  15%  { opacity: .8; }
+  45%  { opacity: 0; }
+  100% { left: 120%; opacity: 0; }
+}
+
+/* ==========================================================
+   TYPE
+========================================================== */
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #c9698f;
+  margin-bottom: 10px;
+}
+
+h1 {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #ff4f87;
+  letter-spacing: .5px;
+}
+
+h2 {
+  font-family: 'Caveat', cursive;
+  font-size: 40px;
+  font-weight: 600;
+  color: #ff5f91;
+  margin-bottom: 18px;
+}
+
+.sub, .final p {
+  margin-top: 12px;
+  font-size: 16px;
+  color: #5c4a53;
+  line-height: 1.6;
+}
+
+.final p { font-size: 18px; margin-top: 18px; }
+
+/* ==========================================================
+   ENVELOPE
+========================================================== */
+
+.envelopeArea {
+  margin: 40px 0 34px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 210px;
+}
+
+#envelope {
+  position: relative;
+  width: 260px;
+  height: 170px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform .8s;
+}
+
+.shadow {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 26px;
+  background: rgba(180, 60, 110, .18);
+  filter: blur(16px);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+#envelope .body {
+  position: absolute;
+  bottom: 0;
+  width: 260px;
+  height: 160px;
+  background: linear-gradient(180deg, #fffdf9, #f8efe8);
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(120, 40, 80, .18);
+  overflow: hidden;
+  z-index: 2;
+}
+
+#envelope .body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .08;
+  background-image: radial-gradient(#d8cabd 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+.letterPreview {
+  position: absolute;
+  bottom: 50px;
+  width: 220px;
+  height: 122px;
+  background: linear-gradient(180deg, #ffffff, #fff8f3);
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .12);
+  z-index: 1;
+  transition: transform .9s cubic-bezier(.2, .8, .3, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.preview-text {
+  font-family: 'Caveat', cursive;
+  font-size: 24px;
+  color: #ff6a95;
+  text-align: left;
+}
+
+.preview-heart {
+  align-self: flex-end;
+  font-size: 20px;
+  color: #ff9cbc;
+}
+
+.flap {
+  position: absolute;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-left: 130px solid transparent;
+  border-right: 130px solid transparent;
+  border-top: 92px solid #f7ece4;
+  transform-origin: top;
+  transition: transform 1s cubic-bezier(.2, .8, .3, 1);
+  z-index: 5;
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, .1));
+}
+
+.wax {
+  position: absolute;
+  top: 52px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 34px;
+  height: 34px;
+  background: radial-gradient(circle, #ff6e9d, #e4477b);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(255, 80, 140, .35);
+  z-index: 6;
+  transition: opacity .5s, transform .5s;
+}
+
+#envelope.open .flap { transform: rotateX(180deg); }
+#envelope.open .letterPreview { transform: translateY(-140px); }
+#envelope.open .wax { opacity: 0; transform: translateX(-50%) scale(.2); }
+#envelope.open { transform: scale(1.03); }
+
+/* ==========================================================
+   GLASS BUTTON
+========================================================== */
+
+.glass-btn {
+  position: relative;
+  overflow: hidden;
+  padding: 15px 42px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ff4f87;
+  background: linear-gradient(155deg, rgba(255,255,255,.6), rgba(255,255,255,.22));
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255,255,255,.7);
+  box-shadow:
+    0 12px 28px rgba(255, 100, 150, .25),
+    0 1px 0 rgba(255,255,255,.8) inset;
+  transition: transform .3s, opacity .3s, box-shadow .3s;
+}
+
+.glass-btn .sheen {
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.85), transparent);
+  transform: skewX(-20deg);
+}
+
+.glass-btn:hover .sheen { left: 150%; transition: 1s; }
+.glass-btn:hover { transform: translateY(-3px) scale(1.02); }
+.glass-btn:active { transform: scale(.96); }
+
+.glass-btn.locked {
+  opacity: .35;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: translateY(6px);
+}
+
+.glass-btn.unlocked {
+  animation: unlock .6s cubic-bezier(.2, .9, .3, 1.2) forwards;
+}
+
+@keyframes unlock {
+  from { opacity: .35; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================
+   LETTER — scrollable glass panel with read-progress gate
+========================================================== */
+
+.letterPanel {
+  max-width: 640px;
+  padding: 34px 30px 30px;
+}
+
+.progressTrack {
+  width: 100%;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255, 130, 170, .18);
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.progressFill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ff9cc0, #ff4f87);
+  border-radius: 4px;
+  transition: width .15s linear;
+}
+
+.letterScroll {
+  max-height: 44vh;
+  overflow-y: auto;
+  text-align: left;
+  padding: 4px 14px 4px 2px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 100, 150, .4) transparent;
+}
+
+.letterScroll::-webkit-scrollbar { width: 5px; }
+.letterScroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 100, 150, .35);
+  border-radius: 10px;
+}
+
+.letterText {
+  font-size: 17px;
+  line-height: 1.85;
+  white-space: pre-line;
+  color: #453640;
+}
+
+.scrollHint {
+  text-align: center;
+  font-size: 13px;
+  color: #c9698f;
+  margin-top: 14px;
+  opacity: .8;
+  animation: bobHint 1.8s ease-in-out infinite;
+}
+
+.scrollHint.hidden { display: none; }
+
+@keyframes bobHint {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+.letterPanel .glass-btn { margin-top: 24px; }
+
+/* ==========================================================
+   CAT SECTION
+========================================================== */
+
+.catPanel { max-width: 380px; }
+
+#cat {
+  width: 220px;
+  max-width: 100%;
+  animation: bounce 2.6s ease-in-out infinite;
+  cursor: pointer;
+  transition: transform .3s;
+  border-radius: 20px;
+}
+
+#cat:hover { transform: scale(1.04); }
+
+.glass-bubble {
+  display: inline-block;
+  margin-top: 22px;
+  padding: 14px 22px;
+  font-size: 17px;
+  color: #5c4a53;
+  background: linear-gradient(155deg, rgba(255,255,255,.6), rgba(255,255,255,.25));
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(255,255,255,.65);
+  border-radius: 22px;
+  box-shadow: 0 10px 26px rgba(255, 100, 150, .18);
+  position: relative;
+}
+
+.glass-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 10px solid rgba(255, 255, 255, .55);
+}
+
+.catPanel .glass-btn { margin-top: 30px; }
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+/* ==========================================================
+   ENDING
+========================================================== */
+
+.final h1 { margin-bottom: 8px; }
+
+/* ==========================================================
+   FALLING PETALS / HEARTS
+========================================================== */
+
+.petal {
+  position: fixed;
+  top: -20px;
+  font-size: 22px;
+  pointer-events: none;
+  animation: fall linear forwards;
+  z-index: 999;
+}
+
+@keyframes fall {
+  0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 768px) {
+  .glass { padding: 30px 24px; border-radius: 26px; }
+  h1 { font-size: 28px; }
+  h2 { font-size: 34px; }
+  .letterText { font-size: 16px; }
+  .letterScroll { max-height: 48vh; }
+  #cat { width: 180px; }
+  .glass-bubble { font-size: 15px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blob, .sheen, .glass-btn .sheen, #cat, .scrollHint {
+    animation: none !important;
+  }
+}
